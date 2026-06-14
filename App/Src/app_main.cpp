@@ -278,6 +278,10 @@ void UiTaskEntry(void*)
     {
       display_elapsed_ms = 0;
       g_oled.Render(snapshot);
+      if (!g_oled.IsReady())
+      {
+        SetOledReady(false);
+      }
     }
 
     vTaskDelayUntil(&wake_time, pdMS_TO_TICKS(config::kUiUpdatePeriodMs));

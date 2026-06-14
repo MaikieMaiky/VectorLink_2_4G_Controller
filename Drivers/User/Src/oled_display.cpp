@@ -117,6 +117,11 @@ void OledDisplay::Render(const AppSnapshot& state)
   }
 }
 
+bool OledDisplay::IsReady() const
+{
+  return ready_;
+}
+
 bool OledDisplay::WriteCommand(uint8_t command)
 {
   uint8_t data[] = {0x00, command};

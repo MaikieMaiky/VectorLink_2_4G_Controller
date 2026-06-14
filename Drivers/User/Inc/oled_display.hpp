@@ -14,6 +14,7 @@ class OledDisplay final
 public:
   bool Initialize();
   void Render(const AppSnapshot& state);
+  bool IsReady() const;
 
 private:
   static constexpr uint8_t kWidth = 128;
