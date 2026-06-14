@@ -6,6 +6,11 @@ extern "C"
 {
 #endif
 
+/**
+ * @brief Initializes the C++ application layer and creates its FreeRTOS tasks.
+ *
+ * This C-linkage function is the stable boundary called by CubeMX-generated C code.
+ */
 void VectorLink_InitializeApp(void);
 
 #ifdef __cplusplus

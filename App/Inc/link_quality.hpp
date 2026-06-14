@@ -6,11 +6,22 @@
 namespace vectorlink
 {
 
+/**
+ * @brief Tracks a 32-transmission rolling success window and the last successful ACK.
+ *
+ * The class contains only value state and is independent of HAL and FreeRTOS, which makes it
+ * suitable for host-side tests.
+ */
 class LinkQuality final
 {
 public:
+  /** Records one completed transmission attempt. */
   void Record(bool success, uint32_t now_ms);
+
+  /** Returns successful samples as an integer percentage in the range 0..100. */
   uint8_t SuccessRate() const;
+
+  /** Returns true when at least one ACK was received and it is not older than the timeout. */
   bool IsConnected(uint32_t now_ms, uint32_t timeout_ms) const;
 
 private:

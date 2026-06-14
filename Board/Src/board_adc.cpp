@@ -23,7 +23,8 @@ bool BoardAdc::Initialize()
     return false;
   }
 
-  // Circular DMA updates memory without CPU intervention; callbacks are not used.
+  // Callbacks are unused, so disabling HT/TC interrupts prevents an interrupt on every partial or
+  // complete five-channel scan.
   __HAL_DMA_DISABLE_IT(hadc1.DMA_Handle, DMA_IT_HT | DMA_IT_TC);
   return true;
 }
@@ -33,7 +34,8 @@ BoardAdc::Snapshot BoardAdc::ReadSnapshot()
   Snapshot first = {};
   Snapshot second = {};
 
-  // DMA is not stopped. Two matching reads avoid returning a partly updated scan.
+  // DMA is not stopped. Two matching reads reduce the chance of returning a scan assembled across
+  // two DMA cycles without disabling interrupts around volatile DMA-owned memory.
   for (uint8_t attempt = 0; attempt < 3; ++attempt)
   {
     for (size_t index = 0; index < kChannelCount; ++index)

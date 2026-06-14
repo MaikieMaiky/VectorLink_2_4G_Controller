@@ -45,6 +45,7 @@ constexpr uint32_t kSpiTimeoutMs = 10;
 
 bool Nrf24l01::Initialize(const Nrf24Config& config)
 {
+  // Keep CE low while changing configuration; high CE would place the radio in an active mode.
   config_ = config;
   SetChipEnable(false);
   SetChipSelect(false);
@@ -71,6 +72,7 @@ bool Nrf24l01::Initialize(const Nrf24Config& config)
     return false;
   }
 
+  // Some NRF24L01-compatible devices require ACTIVATE 0x73 before FEATURE can be written.
   WriteRegister(kRegisterFeature, kFeatureAckPayloadAndDynamicLength);
   bool feature_read_ok = true;
   if (ReadRegister(kRegisterFeature, feature_read_ok) != kFeatureAckPayloadAndDynamicLength)
@@ -124,6 +126,7 @@ bool Nrf24l01::StartTransmit(const uint8_t* payload, uint8_t length)
     return false;
   }
 
+  // A CE pulse longer than 10 us starts one TX transaction in primary transmit mode.
   SetChipEnable(true);
   for (volatile uint32_t delay = 0; delay < 1000; ++delay)
   {
@@ -152,6 +155,7 @@ RadioTransmitResult Nrf24l01::CompleteTransmit(uint8_t* received_payload, uint8_
     return RadioTransmitResult::BusError;
   }
 
+  // MAX_RT leaves the failed payload in TX FIFO, so it must be flushed before the next report.
   if ((status & kStatusMaximumRetries) != 0U)
   {
     ClearStatus(kStatusMaximumRetries);
@@ -166,6 +170,7 @@ RadioTransmitResult Nrf24l01::CompleteTransmit(uint8_t* received_payload, uint8_
   }
 
   ClearStatus(kStatusTxSuccess);
+  // RX_DR together with TX_DS indicates that the hardware ACK contained an ACK payload.
   if ((status & kStatusRxReady) != 0U && received_payload != nullptr)
   {
     ReadPayload(received_payload, received_length);
@@ -216,6 +221,7 @@ bool Nrf24l01::ReadPayload(uint8_t* payload, uint8_t& length)
   Transfer(kCommandReadPayloadWidth, success);
   const uint8_t payload_length = Transfer(kCommandNop, success);
   SetChipSelect(false);
+  // An invalid dynamic width is explicitly specified to require flushing RX FIFO.
   if (!success || payload_length == 0 || payload_length > kMaximumPayloadSize)
   {
     FlushRx();
@@ -237,6 +243,7 @@ bool Nrf24l01::ReadPayload(uint8_t* payload, uint8_t& length)
 
 uint8_t Nrf24l01::Transfer(uint8_t value, bool& success)
 {
+  // SPI transactions are blocking but bounded; RadioTask is the only caller and bus owner.
   uint8_t received = 0;
   if (HAL_SPI_TransmitReceive(&hspi2, &value, &received, 1, kSpiTimeoutMs) != HAL_OK)
   {

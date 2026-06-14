@@ -7,6 +7,7 @@ namespace
 
 void WriteU16(Packet& packet, size_t offset, uint16_t value)
 {
+  // Explicit byte writes make the wire format independent of CPU endianness and object padding.
   packet[offset] = static_cast<uint8_t>(value & 0xFFU);
   packet[offset + 1] = static_cast<uint8_t>(value >> 8U);
 }
@@ -28,6 +29,7 @@ void WriteHeader(Packet& packet, MessageType type, uint16_t sequence)
 
 void FinishPacket(Packet& packet)
 {
+  // CRC bytes are excluded from their own input range.
   WriteU16(packet, 22, CalculateCrc16(packet.data(), 22));
 }
 
@@ -47,6 +49,7 @@ Packet EncodeControl(const ControlData& data)
 
   for (size_t index = 0; index < data.axes.size(); ++index)
   {
+    // The cast preserves the two's-complement bit pattern of a negative signed axis value.
     WriteU16(packet, 6 + index * 2, static_cast<uint16_t>(data.axes[index]));
   }
 
@@ -95,6 +98,7 @@ bool DecodeTelemetry(const Packet& packet, TelemetryState& data)
 
 uint16_t CalculateCrc16(const uint8_t* data, size_t length)
 {
+  // CRC-16/CCITT-FALSE: polynomial 0x1021, initial 0xFFFF, no reflection or final XOR.
   uint16_t crc = 0xFFFFU;
   for (size_t index = 0; index < length; ++index)
   {

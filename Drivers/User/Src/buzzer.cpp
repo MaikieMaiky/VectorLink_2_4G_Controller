@@ -31,6 +31,8 @@ void Buzzer::Play(BuzzerPattern pattern)
     return;
   }
 
+  // Pattern tables contain tone and silence segments. Advancing them in Update() keeps Play()
+  // non-blocking for all callers.
   pattern_ = pattern;
   segment_index_ = 0;
   const Segment* segments = Segments(pattern_, segment_count_);
@@ -114,6 +116,7 @@ void Buzzer::StartSegment(const Segment& segment)
     return;
   }
 
+  // TIM4 runs at a 1 MHz counter rate, so the period is expressed directly in microseconds.
   const uint32_t period = 1000000U / segment.frequency_hz;
   __HAL_TIM_SET_AUTORELOAD(&htim4, period - 1U);
   __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, period / 2U);

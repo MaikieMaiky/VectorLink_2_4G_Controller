@@ -7,6 +7,7 @@
 namespace vectorlink
 {
 
+/** @brief Coarse battery state used by the UI and warning policy. */
 enum class BatteryLevel : uint8_t
 {
   Normal,
@@ -14,6 +15,7 @@ enum class BatteryLevel : uint8_t
   Critical,
 };
 
+/** @brief Processed battery measurement expressed in physical units. */
 struct BatteryState
 {
   uint16_t voltage_mv = 0;
@@ -21,6 +23,7 @@ struct BatteryState
   BatteryLevel level = BatteryLevel::Critical;
 };
 
+/** @brief Latest debounced and normalized controller input snapshot. */
 struct InputState
 {
   std::array<int16_t, 4> axes = {};
@@ -30,6 +33,7 @@ struct InputState
   BatteryState battery = {};
 };
 
+/** @brief Last valid telemetry payload received through an ACK payload. */
 struct TelemetryState
 {
   bool valid = false;
@@ -39,6 +43,7 @@ struct TelemetryState
   uint16_t flags = 0;
 };
 
+/** @brief Radio health and cumulative communication counters. */
 struct RadioState
 {
   bool initialized = false;
@@ -51,6 +56,7 @@ struct RadioState
   uint32_t received = 0;
 };
 
+/** @brief Complete immutable-by-convention view copied between application tasks. */
 struct AppSnapshot
 {
   InputState input = {};

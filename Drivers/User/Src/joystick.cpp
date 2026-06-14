@@ -21,6 +21,7 @@ std::array<int16_t, 4> Joystick::Process(const std::array<uint16_t, 4>& raw)
     }
     else
     {
+      // First-order integer low-pass filter: new = old + (sample - old) / 4.
       filtered_[index] += (static_cast<int32_t>(raw[index]) - filtered_[index]) / 4;
     }
 
@@ -40,6 +41,7 @@ int16_t Joystick::Normalize(uint16_t raw, const JoystickAxisConfig& config)
 
   if (raw < lower_edge)
   {
+    // Each side has its own range because a real potentiometer center is rarely exactly halfway.
     const int32_t range = std::max<int32_t>(1, lower_edge - config.minimum);
     value = -((lower_edge - raw) * 1000) / range;
   }

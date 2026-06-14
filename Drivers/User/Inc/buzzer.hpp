@@ -6,6 +6,7 @@
 namespace vectorlink
 {
 
+/** @brief Named sound patterns ordered from lowest to highest interruption priority. */
 enum class BuzzerPattern : uint8_t
 {
   None,
@@ -16,6 +17,7 @@ enum class BuzzerPattern : uint8_t
   RadioError,
 };
 
+/** @brief Non-blocking TIM4 PWM sound sequencer owned by the UI task. */
 class Buzzer final
 {
 public:
@@ -25,9 +27,16 @@ public:
     uint16_t duration_ms;
   };
 
+  /** Stops PWM and resets the sequencer. */
   bool Initialize();
+
+  /** Starts a pattern unless a higher-priority pattern is already active. */
   void Play(BuzzerPattern pattern);
+
+  /** Advances the active pattern by the elapsed scheduler time. */
   void Update(uint32_t elapsed_ms);
+
+  /** Immediately disables PWM and clears the active pattern. */
   void Stop();
 
 private:

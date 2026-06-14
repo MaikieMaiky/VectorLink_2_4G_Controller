@@ -8,6 +8,7 @@
 namespace vectorlink
 {
 
+/** @brief Result of the asynchronous IRQ-assisted transmit operation. */
 enum class RadioTransmitResult : uint8_t
 {
   Pending,
@@ -17,22 +18,39 @@ enum class RadioTransmitResult : uint8_t
   BusError,
 };
 
+/** @brief Runtime radio channel and five-byte address. */
 struct Nrf24Config
 {
   uint8_t channel;
   std::array<uint8_t, 5> address;
 };
 
+/**
+ * @brief Blocking SPI register driver with an IRQ-assisted transmit state machine.
+ *
+ * Only RadioTask may call this class. The EXTI handler merely wakes that task.
+ */
 class Nrf24l01 final
 {
 public:
   static constexpr size_t kMaximumPayloadSize = 32;
 
+  /** Configures auto-acknowledge, dynamic payloads, ACK payloads, and 1 Mbps operation. */
   bool Initialize(const Nrf24Config& config);
+
+  /** Loads one payload and pulses CE; completion is collected separately after IRQ or timeout. */
   bool StartTransmit(const uint8_t* payload, uint8_t length);
+
+  /** Reads STATUS after an IRQ and optionally extracts an ACK payload. */
   RadioTransmitResult CompleteTransmit(uint8_t* received_payload, uint8_t& received_length);
+
+  /** Aborts a pending transfer after the caller-defined deadline. */
   RadioTransmitResult CheckTransmitTimeout(uint32_t now_ms, uint32_t timeout_ms);
+
+  /** Enters continuous primary receive mode for future diagnostic use. */
   bool EnterReceiveMode();
+
+  /** Reads one dynamic payload and rejects invalid widths. */
   bool ReadPayload(uint8_t* payload, uint8_t& length);
 
 private:

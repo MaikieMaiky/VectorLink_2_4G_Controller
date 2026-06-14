@@ -7,6 +7,7 @@
 namespace vectorlink
 {
 
+/** @brief Stable button levels and one-update edge events. */
 struct ButtonState
 {
   uint16_t current = 0;
@@ -14,9 +15,11 @@ struct ButtonState
   uint16_t released = 0;
 };
 
+/** @brief Debounces twelve buttons with independent consecutive-sample counters. */
 class Buttons final
 {
 public:
+  /** Updates the filter from an active-high pressed mask and returns the stable result. */
   ButtonState Update(uint16_t raw_pressed_mask);
 
 private:

@@ -9,11 +9,17 @@
 namespace vectorlink
 {
 
+/** @brief Minimal SSD1306/SSD1315-compatible 128x64 buffered display driver. */
 class OledDisplay final
 {
 public:
+  /** Probes the configured I2C address, initializes the controller, and clears the panel. */
   bool Initialize();
+
+  /** Draws the selected application page into the framebuffer and transfers it over I2C. */
   void Render(const AppSnapshot& state);
+
+  /** Indicates whether the most recent initialization or screen update succeeded. */
   bool IsReady() const;
 
 private:

@@ -15,12 +15,14 @@ ButtonState Buttons::Update(uint16_t raw_pressed_mask)
 
     if (raw_pressed == stable_pressed)
     {
+      // Returning to the accepted level cancels a partial transition caused by contact bounce.
       counters_[index] = 0;
       continue;
     }
 
     if (++counters_[index] >= kStableSamples)
     {
+      // At the 10 ms input period, three contradictory samples represent 30 ms of stability.
       stable_mask_ ^= bit;
       counters_[index] = 0;
     }

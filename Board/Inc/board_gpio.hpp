@@ -6,9 +6,11 @@
 namespace vectorlink
 {
 
+/** @brief Converts the board's active-low key GPIOs into an active-high bit mask. */
 class BoardGpio final
 {
 public:
+  /** Returns bit 0..11 for currently pressed K1..K12. */
   static uint16_t ReadPressedButtons();
 };
 

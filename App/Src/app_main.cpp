@@ -55,6 +55,8 @@ const std::array<JoystickAxisConfig, 4> kJoystickConfig = {{
 
 AppSnapshot ReadState()
 {
+  // Copy the small aggregate atomically so consumers see fields from one logical update without
+  // introducing a queue or mutex for this single-board application.
   taskENTER_CRITICAL();
   const AppSnapshot state = g_state;
   taskEXIT_CRITICAL();
@@ -92,6 +94,7 @@ void TogglePage()
 
 void RequestBuzzer(BuzzerPattern pattern)
 {
+  // Enum values encode priority, preventing a key click from replacing a pending fault indication.
   taskENTER_CRITICAL();
   if (static_cast<uint8_t>(pattern) > static_cast<uint8_t>(g_pending_buzzer))
   {
@@ -111,6 +114,7 @@ BuzzerPattern TakeBuzzerRequest()
 
 void InputTaskEntry(void*)
 {
+  // Task-local objects retain filter and debounce history for the lifetime of the task.
   Joystick joystick(kJoystickConfig);
   Buttons buttons;
   BatteryMonitor battery;
@@ -137,6 +141,7 @@ void InputTaskEntry(void*)
       RequestBuzzer(BuzzerPattern::KeyPress);
     }
 
+    // DelayUntil keeps a stable sampling phase instead of accumulating execution-time jitter.
     vTaskDelayUntil(&wake_time, pdMS_TO_TICKS(config::kInputPeriodMs));
   }
 }
@@ -156,6 +161,7 @@ void RadioTaskEntry(void*)
     const uint32_t now_ms = HAL_GetTick();
     if (!radio_state.initialized)
     {
+      // Throttled retries keep a missing radio from consuming CPU or starving other tasks.
       if (now_ms - last_initialization_attempt_ms >= 1000U || last_initialization_attempt_ms == 0U)
       {
         last_initialization_attempt_ms = now_ms;
@@ -187,6 +193,7 @@ void RadioTaskEntry(void*)
     ++radio_state.transmitted;
     if (radio.StartTransmit(packet.data(), packet.size()))
     {
+      // EXTI gives the notification. The deadline also covers a missing IRQ or receiver ACK.
       ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(kRadioTransmitTimeoutMs));
       result = radio.CompleteTransmit(received.data(), received_length);
       if (result == RadioTransmitResult::Pending)
@@ -208,6 +215,7 @@ void RadioTaskEntry(void*)
       ++radio_state.succeeded;
       if (received_length == protocol::kPacketSize)
       {
+        // The driver owns a 32-byte buffer; the protocol accepts only its exact 24-byte packet.
         protocol::Packet telemetry_packet = {};
         for (size_t index = 0; index < telemetry_packet.size(); ++index)
         {
@@ -238,6 +246,8 @@ void RadioTaskEntry(void*)
 
 void UiTaskEntry(void*)
 {
+  // UI is the sole owner of I2C display traffic and PWM sound sequencing, so no bus mutex is
+  // needed.
   g_buzzer.Initialize();
   g_buzzer.Play(BuzzerPattern::Startup);
   SetOledReady(g_oled.Initialize());
@@ -295,6 +305,7 @@ class Application final
 public:
   static void Initialize()
   {
+    // ADC DMA must be running before InputTask starts reading channel snapshots.
     if (!BoardAdc::Initialize())
     {
       Error_Handler();
@@ -327,6 +338,7 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t gpio_pin)
   }
 
   BaseType_t higher_priority_task_woken = pdFALSE;
+  // Never touch SPI in EXTI context; wake the task that exclusively owns the radio bus.
   vTaskNotifyGiveFromISR(vectorlink::g_radio_task_handle, &higher_priority_task_woken);
   portYIELD_FROM_ISR(higher_priority_task_woken);
 }

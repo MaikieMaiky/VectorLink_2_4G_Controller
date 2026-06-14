@@ -44,6 +44,7 @@ constexpr uint8_t kSlash[5] = {0x20, 0x10, 0x08, 0x04, 0x02};
 
 bool OledDisplay::Initialize()
 {
+  // Probe first so a disconnected display degrades gracefully instead of delaying every UI frame.
   HAL_Delay(20);
   ready_ = HAL_I2C_IsDeviceReady(&hi2c1, config::kOledAddress << 1U, 2, kI2cTimeoutMs) == HAL_OK;
   if (!ready_)
@@ -131,12 +132,15 @@ bool OledDisplay::WriteCommand(uint8_t command)
 
 bool OledDisplay::UpdateScreen()
 {
+  // Horizontal addressing lets one 1024-byte framebuffer be streamed from column 0, page 0.
   if (!WriteCommand(0x21) || !WriteCommand(0) || !WriteCommand(kWidth - 1) || !WriteCommand(0x22) ||
       !WriteCommand(0) || !WriteCommand(7))
   {
     return false;
   }
 
+  // Prefix each small chunk with the SSD13xx data control byte. Short chunks keep the blocking I2C
+  // call bounded and avoid a second 1 KiB staging buffer.
   std::array<uint8_t, 17> transfer = {};
   transfer[0] = 0x40;
   for (uint16_t offset = 0; offset < buffer_.size(); offset += 16)
@@ -170,6 +174,7 @@ void OledDisplay::DrawChar(uint8_t x, uint8_t y, char character)
     {
       if ((glyph[column] & (1U << row)) != 0U)
       {
+        // The controller stores eight vertical pixels per byte, arranged in eight 128-byte pages.
         const uint16_t index = static_cast<uint16_t>((y + row) / 8U) * kWidth + x + column;
         buffer_[index] |= static_cast<uint8_t>(1U << ((y + row) % 8U));
       }
