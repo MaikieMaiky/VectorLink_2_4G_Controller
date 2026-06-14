@@ -7,7 +7,8 @@
 - STM32CubeMX 外设与时钟配置已完成。
 - EIDE 工程已配置并成功编译。
 - 嘉立创网表与 `.ioc`/生成代码的 MCU 引脚已交叉核对。
-- 应用层、设备驱动和通信协议尚未开始正式实现。
+- 遥控器 V1 应用层、设备驱动和无线协议已实现并通过离线编译与主机测试。
+- 尚未进行实物硬件、电气及时序验证。
 
 ## 硬件概览
 
@@ -27,6 +28,11 @@
 - CubeMX 指南：[docs/STM32CubeMX配置指南.md](docs/STM32CubeMX配置指南.md)
 - 硬件引脚真值表：[docs/HARDWARE_PINOUT.md](docs/HARDWARE_PINOUT.md)
 - 移植与开发准备：[docs/PORTING_AND_DEVELOPMENT.md](docs/PORTING_AND_DEVELOPMENT.md)
+- 固件架构：[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- 无线协议：[docs/RADIO_PROTOCOL.md](docs/RADIO_PROTOCOL.md)
+- 开发进度：[docs/DEVELOPMENT_STATUS.md](docs/DEVELOPMENT_STATUS.md)
+- 上板检查：[docs/HARDWARE_BRINGUP.md](docs/HARDWARE_BRINGUP.md)
+- 代码规范：[docs/CODING_STYLE.md](docs/CODING_STYLE.md)
 
 ## 构建
 
@@ -34,7 +40,15 @@
 2. 选择 `VectorLink_2_4G_Controller` target。
 3. 使用 Arm Compiler 6 构建。
 
-当前验证尺寸约为：Flash 14.15 KiB，RAM 13.52 KiB。`build/`、Keil pack 和中间文件均不纳入版本控制。
+主机逻辑测试：
+
+```powershell
+cmake -S Tests -B Tests/build -G "MinGW Makefiles"
+cmake --build Tests/build
+ctest --test-dir Tests/build --output-on-failure
+```
+
+`build/`、Keil pack 和中间文件均不纳入版本控制。最新 Flash/RAM 使用量记录在开发进度文档中。
 
 ## CubeMX 再生成约束
 
@@ -46,4 +60,3 @@
 ## License
 
 本项目使用 [MIT License](LICENSE)。STM32 HAL、CMSIS 和 FreeRTOS 保留各自上游许可证。
-
