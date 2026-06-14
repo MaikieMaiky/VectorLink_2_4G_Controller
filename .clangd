@@ -1,0 +1,27 @@
+CompileFlags:
+  Add:
+    - -isystemD:\Keil5\ARM\ARMCC\include
+    - -isystemD:\Keil5\ARM\ARMCC\include\rw
+    - -ferror-limit=0
+    - -isystemD:\Keil5\ARM\ARMCLANG/include
+    - -isystemD:\Keil5\ARM\ARMCLANG/include/libcxx
+  Remove:
+    - --cpu
+    - --li
+    - --c99
+    - --split_sections
+    - --diag_suppress=*
+    - --no_depend_system_headers
+    - --depend
+    - --strict
+    - --enum_is_int
+    - --gnu
+    - --apcs=*
+    - --signed_chars
+    - --split_ldm
+    - --execute_only
+    - -Otime
+  CompilationDatabase: ./MDK-ARM/build/VectorLink_2_4G_Controller
+  Compiler: D:\Keil5\ARM\ARMCLANG\bin\armclang.exe
+Diagnostics:
+  Suppress: "*"

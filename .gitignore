@@ -1,0 +1,41 @@
+# Build outputs
+**/build/
+**/bin/
+**/obj/
+**/out/
+MDK-ARM/VectorLink_2_4G_Controller/
+*.axf
+*.elf
+*.hex
+*.s19
+*.map
+*.map.old
+*.map.view
+*.lnp
+*.objlist
+*.lst
+*.o
+*.d
+*.crf
+*.dep
+*.build_log.htm
+*.sct
+
+# Local tool packages and generated metadata
+**/.pack/
+**/.cmsis/
+**/.cache/
+**/.settings/
+**/.eide/log/
+**/.eide.usr.ctx.json
+.mxproject
+
+# Local editor/debug state
+**/.vscode/launch.json
+*.ept
+*.eide-template
+
+# Temporary logs
+codex_keil_build.log
+*.log
+
