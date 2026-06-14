@@ -58,6 +58,7 @@ const osThreadAttr_t defaultTask_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+void vApplicationMallocFailedHook(void);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -69,6 +70,14 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName);
 
 /* USER CODE BEGIN 4 */
+void vApplicationMallocFailedHook(void)
+{
+  taskDISABLE_INTERRUPTS();
+  while (1)
+  {
+  }
+}
+
 void vApplicationStackOverflowHook(xTaskHandle xTask, signed char* pcTaskName)
 {
   /* Run time stack overflow checking is performed if
@@ -76,9 +85,9 @@ void vApplicationStackOverflowHook(xTaskHandle xTask, signed char* pcTaskName)
      called if a stack overflow is detected. */
   (void)xTask;
   (void)pcTaskName;
+  taskDISABLE_INTERRUPTS();
   while (1)
   {
-    osDelay(500);
   }
 }
 /* USER CODE END 4 */
@@ -133,11 +142,7 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-  /* Infinite loop */
-  for (;;)
-  {
-    osDelay(1);
-  }
+  vTaskDelete(NULL);
   /* USER CODE END StartDefaultTask */
 }
 
