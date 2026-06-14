@@ -332,7 +332,7 @@
               <MiscControls />
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine />
-              <IncludePath>../App/Inc;../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../App/Inc;../Board/Inc;../Drivers/User/Inc;../Protocol/Inc;../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -350,7 +350,7 @@
               <MiscControls />
               <Define />
               <Undefine />
-              <IncludePath>../App/Inc;../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../App/Inc;../Board/Inc;../Drivers/User/Inc;../Protocol/Inc;../Core/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Aads>
           <LDads>
@@ -456,6 +456,35 @@
               <FileType>8</FileType>
               <FilePath>../App/Src/app_main.cpp</FilePath>
             </File>
+            <File>
+              <FileName>link_quality.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>../App/Src/link_quality.cpp</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/User/Board</GroupName>
+          <Files>
+            <File><FileName>board_adc.cpp</FileName><FileType>8</FileType><FilePath>../Board/Src/board_adc.cpp</FilePath></File>
+            <File><FileName>board_gpio.cpp</FileName><FileType>8</FileType><FilePath>../Board/Src/board_gpio.cpp</FilePath></File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/User/Drivers</GroupName>
+          <Files>
+            <File><FileName>battery_monitor.cpp</FileName><FileType>8</FileType><FilePath>../Drivers/User/Src/battery_monitor.cpp</FilePath></File>
+            <File><FileName>buttons.cpp</FileName><FileType>8</FileType><FilePath>../Drivers/User/Src/buttons.cpp</FilePath></File>
+            <File><FileName>buzzer.cpp</FileName><FileType>8</FileType><FilePath>../Drivers/User/Src/buzzer.cpp</FilePath></File>
+            <File><FileName>joystick.cpp</FileName><FileType>8</FileType><FilePath>../Drivers/User/Src/joystick.cpp</FilePath></File>
+            <File><FileName>nrf24l01.cpp</FileName><FileType>8</FileType><FilePath>../Drivers/User/Src/nrf24l01.cpp</FilePath></File>
+            <File><FileName>oled_display.cpp</FileName><FileType>8</FileType><FilePath>../Drivers/User/Src/oled_display.cpp</FilePath></File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/User/Protocol</GroupName>
+          <Files>
+            <File><FileName>control_protocol.cpp</FileName><FileType>8</FileType><FilePath>../Protocol/Src/control_protocol.cpp</FilePath></File>
           </Files>
         </Group>
         <Group>

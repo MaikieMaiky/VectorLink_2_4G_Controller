@@ -3,7 +3,10 @@ name: VectorLink_2_4G_Controller
 type: ARM
 deviceName: STM32F103C8
 packDir: .pack/Keil/STM32F1xx_DFP.2.4.1
-srcDirs: []
+srcDirs:
+  - ../Board/Src
+  - ../Drivers/User/Src
+  - ../Protocol/Src
 virtualFolder:
   name: <virtual_root>
   files: []
@@ -61,6 +64,7 @@ virtualFolder:
             - name: Src
               files:
                 - path: ../App/Src/app_main.cpp
+                - path: ../App/Src/link_quality.cpp
               folders: []
     - name: Drivers
       files: []
@@ -187,6 +191,9 @@ targets:
         - .cmsis/include
         - RTE/_VectorLink_2_4G_Controller
         - ../App/Inc
+        - ../Board/Inc
+        - ../Drivers/User/Inc
+        - ../Protocol/Inc
       libList: []
     excludeList:
       - <virtual_root>/Middlewares/FreeRTOS/croutine.c
