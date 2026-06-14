@@ -35,6 +35,15 @@ Protocol/
 - `Protocol`：遥控数据结构、序列化、版本和校验。
 - `App`：任务、状态机、业务逻辑和 UI。
 
+## 当前 C++ 入口
+
+- `App/Src/app_main.cpp` 是 C++17 应用入口，新增业务代码应优先放在 `App` 及后续用户目录中。
+- `App/Inc/app_main.h` 提供 C ABI 的 `VectorLink_InitializeApp()`，供 CubeMX 生成的 C 文件调用。
+- `MX_FREERTOS_Init()` 在 `USER CODE BEGIN RTOS_THREADS` 区域调用 `VectorLink_InitializeApp()`，CubeMX 重新生成时会保留。
+- `VectorLink_InitializeApp()` 使用原生 FreeRTOS `xTaskCreate()` 创建应用任务，不经 CMSIS-RTOS v2 封装。
+- EIDE 使用 Arm Compiler 6、C++17 和 LTO。FreeRTOS 的 `vTaskSwitchContext()` 带有防止 LTO 内联优化的兼容属性，以保留汇编端口需要的任务切换符号。
+- 当前代码不依赖动态内存分配、RTTI 或异常；后续嵌入式 C++ 代码也应优先使用静态对象和明确生命周期。
+
 ## 初始化顺序
 
 1. HAL、系统时钟和 CubeMX 外设初始化。
@@ -116,4 +125,3 @@ Protocol/
 5. NRF SPI 寄存器读写和 IRQ 测试。
 6. 单向发送、应答和丢包统计。
 7. 定义并冻结第一版遥控协议。
-

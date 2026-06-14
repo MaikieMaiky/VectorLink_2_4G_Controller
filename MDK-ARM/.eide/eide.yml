@@ -51,6 +51,17 @@ virtualFolder:
                     - path: ../Core/Src/usart.c
                     - path: ../Core/Src/system_stm32f1xx.c
                   folders: []
+        - name: APP
+          files: []
+          folders:
+            - name: Inc
+              files:
+                - path: ../App/Inc/app_main.h
+              folders: []
+            - name: Src
+              files:
+                - path: ../App/Src/app_main.cpp
+              folders: []
     - name: Drivers
       files: []
       folders:
@@ -175,6 +186,7 @@ targets:
         - ../Drivers/CMSIS/Include
         - .cmsis/include
         - RTE/_VectorLink_2_4G_Controller
+        - ../App/Inc
       libList: []
     excludeList:
       - <virtual_root>/Middlewares/FreeRTOS/croutine.c

@@ -1,0 +1,24 @@
+---
+Language: Cpp
+BasedOnStyle: Microsoft
+UseTab: Never
+IndentWidth: 2
+TabWidth: 2
+ColumnLimit: 100
+BreakBeforeBraces: Allman
+DerivePointerAlignment: false
+PointerAlignment: Left
+ReferenceAlignment: Left
+SortIncludes: CaseSensitive
+IncludeBlocks: Regroup
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+IndentCaseLabels: true
+NamespaceIndentation: None
+IndentExternBlock: NoIndent
+FixNamespaceComments: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+InsertNewlineAtEOF: true
+...
