@@ -33,6 +33,8 @@
 - 开发进度：[docs/DEVELOPMENT_STATUS.md](docs/DEVELOPMENT_STATUS.md)
 - 上板检查：[docs/HARDWARE_BRINGUP.md](docs/HARDWARE_BRINGUP.md)
 - 代码规范：[docs/CODING_STYLE.md](docs/CODING_STYLE.md)
+- 源码阅读指南：[docs/READING_GUIDE.md](docs/READING_GUIDE.md)
+- 分阶段学习练习：[docs/learning/EXERCISES.md](docs/learning/EXERCISES.md)
 
 ## 构建
 

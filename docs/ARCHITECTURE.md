@@ -59,3 +59,5 @@ NRF IRQ -> task notification -> RadioTask -> ACK Payload -> TelemetryState
 - OLED 地址、NRF 频道和无线地址。
 
 上板后应优先修改这些配置，而不是在驱动实现中散落常量。
+
+更详细的调用链、C++ 设计和任务数据流讲解见[源码阅读指南](READING_GUIDE.md)。

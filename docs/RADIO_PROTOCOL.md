@@ -50,3 +50,5 @@
 ## 兼容性
 
 未来增加字段时优先使用保留位或发布新协议版本。版本不匹配的数据包当前直接拒绝，不做隐式兼容。
+
+协议序列化、符号数和 CRC 的代码级讲解见[协议与测试](learning/PROTOCOL_AND_TESTING.md)，NRF 状态机见[无线系统](learning/RADIO_SYSTEM.md)。
